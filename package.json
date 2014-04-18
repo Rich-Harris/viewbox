@@ -1,0 +1,31 @@
+{
+  "name": "viewbox",
+  "description": "Pan and zoom the contents of SVG elements, and translate between coordinate systems",
+  "version": "0.1.0",
+  "main": "build/ViewBox.js",
+  "github": "https://github.com/Rich-Harris/ViewBox",
+  "author": "Rich Harris",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-uglify": "~0.2.4",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.4",
+    "grunt-contrib-qunit": "~0.3.0",
+    "grunt-contrib-requirejs": "~0.4.3",
+    "amdclean": "~1.5.0",
+    "jit-grunt": "~0.5.0",
+    "grunt-jsbeautifier": "~0.2.7",
+    "grunt-contrib-clean": "~0.5.0"
+  },
+  "jam": {
+    "main": "ViewBox.js",
+    "include": [
+      "ViewBox.js",
+      "ViewBox.min.js",
+      "README.md"
+    ]
+  }
+}
