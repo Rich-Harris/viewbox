@@ -12,6 +12,7 @@
     "build",
     "grunt",
     "node_modules",
+    "release",
     "sandbox",
     "src",
     "test",
