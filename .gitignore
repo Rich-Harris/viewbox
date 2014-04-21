@@ -1,6 +1,5 @@
 node_modules/
 build/
-sandbox/
 !sandbox/*
 workspace/
 tmp/

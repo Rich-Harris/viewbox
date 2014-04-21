@@ -1,24 +1,27 @@
-define( function () {
+define([
+	'utils/clean'
+], function (
+	clean
+) {
 
 	'use strict';
 
 	return function ViewBox$getSvgCoords ( clientX, clientY ) {
-		var ctm;
+		var ctm, ctm_a;
 
-		if ( this._dirty ) {
-			this.clean();
-		}
+		if ( this._dirty ) clean( this );
 
 		if ( typeof clientX === 'object' ) {
 			clientY = clientX.y;
 			clientX = clientX.x;
 		}
 
-		ctm = this.screenCTM;
+		ctm = this._ctm;
+		ctm_a = ctm.a;
 
 		return {
-			x: ( clientX - ctm.e ) / ctm.a,
-			y: ( clientY - ctm.f ) / ctm.a
+			x: ( clientX - ctm.e ) / ctm_a,
+			y: ( clientY - ctm.f ) / ctm_a
 		};
 	};
 

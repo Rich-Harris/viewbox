@@ -1,7 +1,9 @@
 define([
-	'utils/extend'
+	'utils/extend',
+	'utils/correct'
 ], function (
-	extend
+	extend,
+	correct
 ) {
 
 	'use strict';
@@ -20,10 +22,11 @@ define([
 			extend( this, options );
 		}
 
-		corrected = this.correct( this.x, this.y, this.width, this.height );
+		corrected = correct( this, this.x, this.y, this.width, this.height );
 		extend( this, corrected );
 
 		this.svg.setAttribute( 'viewBox', this.toString() );
+		this._dirty = true;
 	};
 
 });

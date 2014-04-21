@@ -1,7 +1,5 @@
 define([
 	'ViewBox/prototype/animate',
-	'ViewBox/prototype/aspectRatio',
-	'ViewBox/prototype/clean',
 	'ViewBox/prototype/correct',
 	'ViewBox/prototype/getClientCoords',
 	'ViewBox/prototype/getSvgCoords',
@@ -9,13 +7,12 @@ define([
 	'ViewBox/prototype/getZoom',
 	'ViewBox/prototype/pan',
 	'ViewBox/prototype/set',
+	'ViewBox/prototype/smoothZoom',
 	'ViewBox/prototype/toString',
 	'ViewBox/prototype/zoom',
 	'utils/easing'
 ], function (
 	animate,
-	aspectRatio,
-	clean,
 	correct,
 	getClientCoords,
 	getSvgCoords,
@@ -23,6 +20,7 @@ define([
 	getZoom,
 	pan,
 	set,
+	smoothZoom,
 	toString,
 	zoom,
 	easing
@@ -78,15 +76,13 @@ define([
 
 	ViewBox.prototype = {
 		animate: animate,
-		aspectRatio: aspectRatio,
-		clean: clean,
-		correct: correct,
 		getClientCoords: getClientCoords,
 		getSvgCoords: getSvgCoords,
 		getViewBoxFromSvg: getViewBoxFromSvg,
 		getZoom: getZoom,
 		pan: pan,
 		set: set,
+		smoothZoom: smoothZoom,
 		toString: toString,
 		zoom: zoom
 	};

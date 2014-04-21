@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang='en-GB'>
+<head>
+	<meta charset='utf-8'>
+
+	<title>2 | ViewBox.js sandbox</title>
+
+	<!-- CSS -->
+	<link rel='stylesheet' href='../_sandbox.css'>
+
+	<!--[if lte IE 8]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<style>
+		svg {
+			width: 750px;
+			height: 450px;
+			outline: 1px solid #eee;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<a href='../'>&laquo;</a> <h1>2</h1>
+	</header>
+
+	<main>
+		<button>random</button>
+		<svg viewBox='0 0 900 900'></svg>
+	</main>
+
+	<footer>
+
+	</footer>
+
+	<!-- JS -->
+	<script src='../require.js'></script>
+	<script>
+		var vb, fixture, svg, circle, button;
+
+		fixture = document.querySelector( 'main' ); // so we can copy and paste into test suite more easily
+		svg = fixture.querySelector( 'svg' );
+		button = fixture.querySelector( 'button' );
+
+		// Configure RequireJS to load ViewBox from the src/ folder
+		require.config({ baseUrl: '../../src/' });
+
+		require([ 'viewbox' ], function ( ViewBox ) {
+			window.ViewBox = ViewBox;
+
+			// YOUR CODE GOES HERE
+			vb = new ViewBox( svg );
+
+			get( 'awesome_tiger', function ( doc ) {
+				console.log( doc.rootElement );
+				while ( doc.rootElement.firstChild ) {
+					svg.appendChild( doc.rootElement.firstChild );
+				}
+
+				circle = document.createElementNS( 'http://www.w3.org/2000/svg', 'circle' );
+				console.log( 'circle', circle );
+				circle.setAttribute( 'r', '5' );
+				svg.appendChild( circle );
+
+				vb.smoothZoom( 600, 600, 2, {
+					duration: 800,
+					easing: 'easeOut'
+				});
+			});
+
+			svg.addEventListener( 'click', function ( event ) {
+				var svgCoords = vb.getSvgCoords( event.clientX, event.clientY );
+
+				console.log( svgCoords, vb.getZoom() );
+
+				vb.smoothZoom( svgCoords.x, svgCoords.y, vb.getZoom() );
+			});
+
+			svg.addEventListener( 'mousemove', function ( event ) {
+				var svgCoords = vb.getSvgCoords( event.clientX, event.clientY );
+
+				circle.setAttribute( 'cx', svgCoords.x );
+				circle.setAttribute( 'cy', svgCoords.y );
+			});
+
+			button.addEventListener( 'click', function () {
+				vb.smoothZoom( Math.random() * 900, Math.random() * 900, Math.random() * 3 );
+			});
+		});
+
+		function get ( url, callback ) {
+			var xhr = new XMLHttpRequest();
+			xhr.open( 'GET', url );
+			xhr.onload = function () {
+				callback( xhr.responseXML );
+			};
+			xhr.send();
+		}
+	</script>
+</body>
+</html>

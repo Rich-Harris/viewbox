@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang='en-GB'>
+<head>
+	<meta charset='utf-8'>
+
+	<title>1 | ViewBox.js sandbox</title>
+
+	<!-- CSS -->
+	<link rel='stylesheet' href='../_sandbox.css'>
+
+	<!--[if lte IE 8]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<style>
+		svg {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<a href='../'>&laquo;</a> <h1>1</h1>
+	</header>
+
+	<main>
+		<svg viewBox='0 0 300 150'>
+			<rect x='50' y='50' width='200' height='50' fill='rgb(200,200,240)' stroke='black'></rect>
+
+			<circle r='10'></circle>
+		</svg>
+	</main>
+
+	<footer>
+
+	</footer>
+
+	<!-- JS -->
+	<script src='../require.js'></script>
+	<script>
+		var vb, fixture, svg, circle;
+
+		fixture = document.querySelector( 'main' ); // so we can copy and paste into test suite more easily
+		svg = fixture.querySelector( 'svg' );
+		circle = svg.querySelector( 'circle' );
+
+		// Configure RequireJS to load ViewBox from the src/ folder
+		require.config({ baseUrl: '../../src/' });
+
+		require([ 'viewbox' ], function ( ViewBox ) {
+			window.ViewBox = ViewBox;
+
+			// YOUR CODE GOES HERE
+			vb = new ViewBox( svg );
+			console.profile( 'animate' );
+			vb.zoom( 50, 50, 1.2, {
+				duration: 800,
+				easing: 'easeOut',
+				complete: function () {
+					console.profileEnd( 'animate' );
+				}
+			});
+
+			svg.addEventListener( 'mousemove', function ( event ) {
+				var svgCoords = vb.getSvgCoords( event.clientX, event.clientY );
+
+				console.log( 'event (%s, %s)', event.clientX, event.clientY );
+				console.log( 'svg   (%s, %s)', svgCoords.x, svgCoords.y );
+
+				circle.setAttribute( 'cx', svgCoords.x );
+				circle.setAttribute( 'cy', svgCoords.y );
+			});
+		});
+	</script>
+</body>
+</html>

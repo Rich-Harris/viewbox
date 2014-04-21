@@ -1,10 +1,14 @@
-define( function () {
+define([
+	'utils/correct'
+], function (
+	correct
+) {
 
 	'use strict';
 
 	return function ViewBox$correct ( x, y, width, height, secondPass ) {
-
-		var zoom, clientBox, minWidth, minHeight, corrected, zoomFactor, recheck;
+		return correctViewBox( this, x, y, width, height );
+		/*var zoom, clientBox, minWidth, minHeight, corrected, zoomFactor, recheck;
 
 		// TEMP
 		if ( typeof x === 'object' ) {
@@ -78,7 +82,7 @@ define( function () {
 			corrected = this.correct( corrected.x, corrected.y, corrected.width, corrected.height, true );
 		}
 
-		return corrected;
+		return corrected;*/
 	};
 
 });
