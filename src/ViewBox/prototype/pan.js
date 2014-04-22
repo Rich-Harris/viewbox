@@ -1,9 +1,17 @@
-define( function () {
+define([
+	'utils/clean',
+	'utils/constrain'
+], function (
+	clean,
+	constrain
+) {
 
 	'use strict';
 
 	return function ViewBox$pan ( dx, dy, animate ) {
-		var zoom, newX, newY, corrected;
+		var zoom, newX, newY, constrained;
+
+		if ( this._dirty ) this.clean();
 
 		if ( typeof dx === 'object' ) {
 			animate = dx.animate;
@@ -16,12 +24,12 @@ define( function () {
 		newX = this.x -( dx / zoom );
 		newY = this.y -( dy / zoom );
 
-		corrected = this.correct( newX, newY, this.width, this.height );
+		constrained = constrain( newX, newY, this.width, this.height, this._elWidth, this._elHeight, this.constraints );
 
 		if ( animate ) {
-			this.animate( corrected, animate );
+			this.animate( constrained, animate );
 		} else {
-			extend( this, corrected );
+			extend( this, constrained );
 			this.svg.setAttribute( 'viewBox', this.toString() );
 		}
 	};

@@ -6,30 +6,30 @@ define([
 
 	'use strict';
 
-	return function ViewBox$getViewBoxFromSvg () {
+	return function getViewBoxFromSvg ( svg ) {
 		var viewBoxAttr, width, height, boundingClientRect;
 
-		viewBoxAttr = this.svg.getAttribute( 'viewBox' );
+		viewBoxAttr = svg.getAttribute( 'viewBox' );
 		if ( viewBoxAttr ) {
-			this.set( parseViewBox( viewBoxAttr ) );
+			return parseViewBox( viewBoxAttr );
 		}
 
 		else {
-			width = this.svg.getAttribute( 'width' );
-			height = this.svg.getAttribute( 'height' );
+			width = svg.getAttribute( 'width' );
+			height = svg.getAttribute( 'height' );
 
 			if ( !width && !height ) {
-				boundingClientRect = this.svg.getBoundingClientRect;
+				boundingClientRect = svg.getBoundingClientRect();
 				width = boundingClientRect.width;
 				height = boundingClientRect.height;
 			}
 
-			this.set({
+			return {
 				x: 0,
 				y: 0,
 				width: width || 100,
 				height: height || 100
-			});
+			};
 		}
 	};
 

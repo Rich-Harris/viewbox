@@ -1,13 +1,26 @@
 define([
-	'utils/rAF'
+	'utils/rAF',
+	'utils/constrain',
+	'utils/maximise'
 ], function (
-	rAF
+	rAF,
+	constrain,
+	maximise
 ) {
+
+	var animation, maximised;
+
+	maximised = {}; // we can reuse this object
 
 	var animation = function ( viewBox, to, options ) {
 		var animation, fx, fy, fw, fh, dx, dy, dw, dh, startTime, duration, running, easing, loop;
 
 		animation = {};
+
+		// First, we need to get the maximised viewbox
+		maximised = maximise( viewBox.x, viewBox.y, viewBox.width, viewBox.height, viewBox._elWidth, viewBox._elHeight );
+
+		console.log( 'maximised', maximised );
 
 		fx = viewBox.x;
 		fy = viewBox.y;
@@ -51,6 +64,9 @@ define([
 				viewBox.svg.setAttribute( 'viewBox', viewBox.toString() );
 
 				if ( options.complete ) {
+					// set the REAL viewbox
+
+
 					options.complete();
 				}
 
@@ -87,7 +103,7 @@ define([
 	};
 
 	return function ViewBox$animate ( x, y, width, height, options ) {
-		var corrected;
+		var constrained;
 
 		if ( typeof x === 'object' ) {
 			options = y;
@@ -104,9 +120,9 @@ define([
 			this.animation.stop();
 		}
 
-		corrected = this.correct( x, y, width, height );
+		constrained = constrain( this, x, y, width, height );
 
-		this.animation = animation( this, corrected, options );
+		this.animation = animation( this, constrained, options );
 	};
 
 

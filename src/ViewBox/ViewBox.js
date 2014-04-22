@@ -1,43 +1,45 @@
 define([
 	'ViewBox/prototype/animate',
-	'ViewBox/prototype/correct',
 	'ViewBox/prototype/getClientCoords',
 	'ViewBox/prototype/getSvgCoords',
-	'ViewBox/prototype/getViewBoxFromSvg',
 	'ViewBox/prototype/getZoom',
 	'ViewBox/prototype/pan',
 	'ViewBox/prototype/set',
 	'ViewBox/prototype/smoothZoom',
 	'ViewBox/prototype/toString',
 	'ViewBox/prototype/zoom',
-	'utils/easing'
+	'utils/easing',
+	'utils/getViewBoxFromSvg'
 ], function (
 	animate,
-	correct,
 	getClientCoords,
 	getSvgCoords,
-	getViewBoxFromSvg,
 	getZoom,
 	pan,
 	set,
 	smoothZoom,
 	toString,
 	zoom,
-	easing
+	easing,
+	getViewBoxFromSvg
 ) {
 
 	'use strict';
 
-	var ViewBox = function ( svg, x, y, width, height, options ) {
+	var ViewBox, empty = {};
 
-		var self = this;
+	var ViewBox = function ( svg, options ) {
+
+		var self = this, initialViewBox;
 
 		if ( !( svg instanceof SVGSVGElement ) ) {
 			throw new Error( 'First argument must be an svg element' );
 		}
 
-		this.svg = svg;
+		options = options || empty;
 
+		this.svg = svg;
+		this.constraints = options.constraints || {};
 
 		// register as dirty whenever user resizes or scrolls (manually invoke using
 		// the viewBox.dirty() method)
@@ -51,34 +53,20 @@ define([
 		this.dirty();
 
 
-		if ( arguments.length === 1 ) {
-			this.getViewBoxFromSvg();
-		}
+		initialViewBox = getViewBoxFromSvg( this.svg );
 
-		else if ( arguments.length === 2 && typeof x === 'object' ) {
-			this.getViewBoxFromSvg();
-			this.set( x );
-		}
+		if ( 'x' in options ) initialViewBox.x = options.x;
+		if ( 'y' in options ) initialViewBox.y = options.y;
+		if ( 'width' in options ) initialViewBox.width = options.width;
+		if ( 'height' in options ) initialViewBox.height = options.height;
 
-		else {
-			this.set({
-				x: x,
-				y: y,
-				width: width,
-				height: height
-			});
-
-			if ( options ) {
-				this.set( options );
-			}
-		}
+		this.set( initialViewBox );
 	};
 
 	ViewBox.prototype = {
 		animate: animate,
 		getClientCoords: getClientCoords,
 		getSvgCoords: getSvgCoords,
-		getViewBoxFromSvg: getViewBoxFromSvg,
 		getZoom: getZoom,
 		pan: pan,
 		set: set,
