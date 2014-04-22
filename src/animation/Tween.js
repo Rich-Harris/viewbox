@@ -1,36 +1,38 @@
 define([
-	'utils/rAF'
+	'utils/rAF',
+	'utils/maximise',
+	'utils/constrain',
+	'utils/set'
 ], function (
-	rAF
+	rAF,
+	maximise,
+	constrain,
+	set
 ) {
 
 	'use strict';
 
-	var Tween = function ( viewBox, target, options ) {
-		var animation = this, fx, fy, fw, fh, dx, dy, dw, dh, startTime, duration, running, easing, loop;
+	var Tween = function ( viewBox, target, options, easing ) {
+		var animation = this, constrained, maximisedStart, maximisedEnd, fx, fy, fw, fh, dx, dy, dw, dh, startTime, duration, running, easing, loop;
 
-		fx = viewBox.x;
-		fy = viewBox.y;
-		fw = viewBox.width;
-		fh = viewBox.height;
+		constrained = constrain( target.x, target.y, target.width, target.height, viewBox._elWidth, viewBox._elWidth, viewBox.constraints );
 
-		dx = target.x - fx;
-		dy = target.y - fy;
-		dw = target.width - fw;
-		dh = target.height - fh;
+		maximisedStart = maximise( viewBox.x, viewBox.y, viewBox.width, viewBox.height, viewBox._aspectRatio );
+		maximisedEnd = maximise( constrained.x, constrained.y, constrained.width, constrained.height, viewBox._aspectRatio );
+
+		set( viewBox, maximisedStart );
+
+		fx = maximisedStart.x;
+		fy = maximisedStart.y;
+		fw = maximisedStart.width;
+		fh = maximisedStart.height;
+
+		dx = maximisedEnd.x - fx;
+		dy = maximisedEnd.y - fy;
+		dw = maximisedEnd.width - fw;
+		dh = maximisedEnd.height - fh;
 
 		duration = ( options.duration !== undefined ? options.duration : 400 );
-		if ( options.easing ) {
-			if ( typeof options.easing === 'function' ) {
-				easing = options.easing;
-			} else {
-				easing = ViewBox.easing[ options.easing ];
-			}
-		}
-
-		if ( !easing ) {
-			easing = function ( t ) { return t; };
-		}
 
 		loop = function () {
 			var timeNow, elapsed, t;
@@ -43,15 +45,10 @@ define([
 			elapsed = timeNow - startTime;
 
 			if ( elapsed > duration ) {
-				viewBox.x = target.x;
-				viewBox.y = target.y;
-				viewBox.width = target.width;
-				viewBox.height = target.height;
-
-				viewBox.svg.setAttribute( 'viewBox', viewBox.toString() );
+				set( viewBox, constrained );
 
 				if ( options.complete ) {
-					options.complete();
+					options.complete.call( viewBox, 1 );
 				}
 
 				return;
@@ -59,17 +56,16 @@ define([
 
 			t = easing( elapsed / duration );
 
-			viewBox.x = fx + ( t * dx );
-			viewBox.y = fy + ( t * dy );
-			viewBox.width = fw + ( t * dw );
-			viewBox.height = fh + ( t * dh );
+			set( viewBox, {
+				x: fx + ( t * dx ),
+				y: fy + ( t * dy ),
+				width: fw + ( t * dw ),
+				height: fh + ( t * dh )
+			});
 
 			if ( options.step ) {
-				options.step( t );
+				options.step.call( viewBox, t );
 			}
-
-			viewBox.svg.setAttribute( 'viewBox', viewBox.toString() );
-			viewBox.dirty();
 
 			rAF( loop );
 		};

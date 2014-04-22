@@ -1,108 +1,29 @@
 define([
 	'utils/rAF',
+	'utils/clean',
 	'utils/constrain',
 	'utils/maximise',
 	'utils/minimise',
+	'utils/easing',
 	'animation/Tween',
 	'animation/VanWijk'
 ], function (
 	rAF,
+	clean,
 	constrain,
 	maximise,
 	minimise,
+	easing,
 	Tween,
 	VanWijk
 ) {
 
-	var animation, empty = {};
-
-	animation = function ( viewBox, to, options ) {
-		var animation, fx, fy, fw, fh, dx, dy, dw, dh, startTime, duration, running, easing, loop;
-
-		animation = {};
-
-		fx = viewBox.x;
-		fy = viewBox.y;
-		fw = viewBox.width;
-		fh = viewBox.height;
-
-		dx = to.x - fx;
-		dy = to.y - fy;
-		dw = to.width - fw;
-		dh = to.height - fh;
-
-		duration = ( options.duration !== undefined ? options.duration : 400 );
-		if ( options.easing ) {
-			if ( typeof options.easing === 'function' ) {
-				easing = options.easing;
-			} else {
-				easing = ViewBox.easing[ options.easing ];
-			}
-		}
-
-		if ( !easing ) {
-			easing = function ( t ) { return t; };
-		}
-
-		loop = function () {
-			var timeNow, elapsed, t;
-
-			if ( !running ) {
-				return;
-			}
-
-			timeNow = Date.now();
-			elapsed = timeNow - startTime;
-
-			if ( elapsed > duration ) {
-				viewBox.x = to.x;
-				viewBox.y = to.y;
-				viewBox.width = to.width;
-				viewBox.height = to.height;
-
-				viewBox.svg.setAttribute( 'viewBox', viewBox.toString() );
-
-				if ( options.complete ) {
-					// set the REAL viewbox
-
-
-					options.complete();
-				}
-
-				return;
-			}
-
-			t = easing( elapsed / duration );
-
-			viewBox.x = fx + ( t * dx );
-			viewBox.y = fy + ( t * dy );
-			viewBox.width = fw + ( t * dw );
-			viewBox.height = fh + ( t * dh );
-
-			if ( options.step ) {
-				options.step( t );
-			}
-
-			viewBox.svg.setAttribute( 'viewBox', viewBox.toString() );
-			viewBox.dirty();
-
-			rAF( loop );
-		};
-
-		animation.stop = function () {
-			running = false;
-		};
-
-		running = true;
-		startTime = Date.now();
-
-		loop();
-
-		return animation;
-	};
+	var empty = {};
 
 	return function ViewBox$animate ( x, y, width, height, options ) {
-		var maximised, reshaped, constrained;
+		var maximised, reshaped, constrained, easingFn;
+
+		if ( this._dirty ) clean( this );
 
 		if ( typeof x === 'object' ) {
 			options = y;
@@ -119,19 +40,19 @@ define([
 			this.animation.stop();
 		}
 
-		// first, reshape the current viewbox so it matches the target shape
-		maximised = maximise( this.x, this.y, this.width, this.height, this._elWidth / this._elHeight );
-		reshaped = minimise( maximised.x, maximised.y, maximised.width, maximised.height, width / height );
-
-		this.set( reshaped );
-
 		constrained = constrain( x, y, width, height, this._elWidth, this._elHeight, this.constraints );
 
+		easingFn = ( typeof options.easing === 'function' ? options.easing : easing[ options.easing ] ) || linear;
+
 		if ( options.smooth ) {
-			this.animation = new VanWijk( this, constrained, options );
+			this.animation = new VanWijk( this, constrained, options, easingFn );
 		} else {
-			this.animation = new Tween( this, constrained, options );
+			this.animation = new Tween( this, constrained, options, easingFn );
 		}
 	};
+
+	function linear ( t ) {
+		return t;
+	}
 
 });

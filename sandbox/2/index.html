@@ -18,6 +18,10 @@
 			height: 750px;
 			outline: 1px solid #eee;
 		}
+
+		rect {
+			fill: rgba(0,0,0,0.1);
+		}
 	</style>
 </head>
 
@@ -38,7 +42,7 @@
 	<!-- JS -->
 	<script src='../require.js'></script>
 	<script>
-		var vb, fixture, svg, circle, button;
+		var vb, fixture, svg, circle, rect, button;
 
 		fixture = document.querySelector( 'main' ); // so we can copy and paste into test suite more easily
 		svg = fixture.querySelector( 'svg' );
@@ -52,38 +56,37 @@
 
 			// YOUR CODE GOES HERE
 			vb = new ViewBox( svg, {
-				constraints: { left: 100, right: 800 }
+				constraints: { left: 100, right: 800, top: 100, bottom: 800 }
 			});
 
 			get( 'awesome_tiger', function ( doc ) {
-				console.log( doc.rootElement );
 				while ( doc.rootElement.firstChild ) {
 					svg.appendChild( doc.rootElement.firstChild );
 				}
 
 				circle = document.createElementNS( 'http://www.w3.org/2000/svg', 'circle' );
-				console.log( 'circle', circle );
 				circle.setAttribute( 'r', '5' );
 				svg.appendChild( circle );
 
-				vb.animate( 300, 200, 400, 500 );
+				rect = document.createElementNS( 'http://www.w3.org/2000/svg', 'rect' );
+				svg.appendChild( rect );
 
-				// vb.smoothZoom( 600, 600, 2, {
-				// 	duration: 800,
-				// 	easing: 'easeOut'
-				// });
+				vb.animate( 300, 200, 400, 500, {
+					smooth: true
+				});
 			});
 
 			svg.addEventListener( 'click', function ( event ) {
 				var svgCoords = vb.getSvgCoords( event.clientX, event.clientY );
-
-				console.log( svgCoords, vb.getZoom() );
 
 				vb.animate({
 					x: svgCoords.x - vb.width / 2,
 					y: svgCoords.y - vb.height / 2,
 					width: vb.width,
 					height: vb.height
+				}, {
+					smooth: true,
+					easing: 'easeInOut'
 				});
 			});
 
@@ -100,6 +103,15 @@
 					y: Math.random() * 900,
 					width: Math.random() * 900,
 					height: Math.random() * 900
+				}, {
+					smooth: true,
+					step: function () {
+						rect.setAttribute( 'x', this.x );
+						rect.setAttribute( 'y', this.y );
+						rect.setAttribute( 'width', this.width );
+						rect.setAttribute( 'height', this.height );
+					},
+					easing: 'easeInOut'
 				});
 			});
 		});

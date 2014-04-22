@@ -2,12 +2,14 @@ define([
 	'utils/clean',
 	'utils/extend',
 	'utils/constrain',
-	'utils/maximise'
+	'utils/maximise',
+	'utils/set'
 ], function (
 	clean,
 	extend,
 	constrain,
-	maximise
+	maximise,
+	set
 ) {
 
 	'use strict';
@@ -35,13 +37,7 @@ define([
 
 		constrained = constrain( this.x, this.y, this.width, this.height, this._elWidth, this._elHeight, this.constraints );
 
-		this.x = constrained.x;
-		this.y = constrained.y;
-		this.width = constrained.width;
-		this.height = constrained.height;
-
-		this.svg.setAttribute( 'viewBox', this.toString() );
-		this._dirty = true;
+		set( this, constrained );
 	};
 
 });

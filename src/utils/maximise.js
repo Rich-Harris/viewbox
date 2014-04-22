@@ -2,9 +2,9 @@ define( function () {
 
 	'use strict';
 
-	var maximised = {};
-
 	return function maximise ( x, y, width, height, containerAspectRatio ) {
+		var maximised = {};
+
 		if ( ( width / height ) < containerAspectRatio ) {
 			// preserve height
 			maximised.width = height * containerAspectRatio;

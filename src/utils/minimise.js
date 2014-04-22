@@ -2,9 +2,9 @@ define( function () {
 
 	'use strict';
 
-	var minimised = {};
-
 	return function minimise ( x, y, width, height, originalAspectRatio ) {
+		var minimised = {};
+
 		if ( ( width / height ) > originalAspectRatio ) {
 			// preserve height
 			minimised.width = height * originalAspectRatio;
