@@ -6,6 +6,7 @@ define([
 	'ViewBox/prototype/pan',
 	'ViewBox/prototype/set',
 	'ViewBox/prototype/smoothZoom',
+	'ViewBox/prototype/toJSON',
 	'ViewBox/prototype/toString',
 	'ViewBox/prototype/zoom',
 	'utils/easing',
@@ -18,6 +19,7 @@ define([
 	pan,
 	set,
 	smoothZoom,
+	toJSON,
 	toString,
 	zoom,
 	easing,
@@ -71,6 +73,7 @@ define([
 		pan: pan,
 		set: set,
 		smoothZoom: smoothZoom,
+		toJSON: toJSON,
 		toString: toString,
 		zoom: zoom
 	};

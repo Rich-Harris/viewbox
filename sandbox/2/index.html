@@ -14,8 +14,8 @@
 
 	<style>
 		svg {
-			width: 750px;
-			height: 450px;
+			width: 450px;
+			height: 750px;
 			outline: 1px solid #eee;
 		}
 	</style>
@@ -51,7 +51,9 @@
 			window.ViewBox = ViewBox;
 
 			// YOUR CODE GOES HERE
-			vb = new ViewBox( svg );
+			vb = new ViewBox( svg, {
+				constraints: { left: 100, right: 800 }
+			});
 
 			get( 'awesome_tiger', function ( doc ) {
 				console.log( doc.rootElement );
@@ -64,10 +66,10 @@
 				circle.setAttribute( 'r', '5' );
 				svg.appendChild( circle );
 
-				vb.smoothZoom( 600, 600, 2, {
-					duration: 800,
-					easing: 'easeOut'
-				});
+				// vb.smoothZoom( 600, 600, 2, {
+				// 	duration: 800,
+				// 	easing: 'easeOut'
+				// });
 			});
 
 			svg.addEventListener( 'click', function ( event ) {
@@ -75,7 +77,12 @@
 
 				console.log( svgCoords, vb.getZoom() );
 
-				vb.smoothZoom( svgCoords.x, svgCoords.y, vb.getZoom() );
+				vb.animate({
+					x: svgCoords.x - vb.width / 2,
+					y: svgCoords.y - vb.height / 2,
+					width: vb.width,
+					height: vb.height
+				});
 			});
 
 			svg.addEventListener( 'mousemove', function ( event ) {
@@ -86,7 +93,12 @@
 			});
 
 			button.addEventListener( 'click', function () {
-				vb.smoothZoom( Math.random() * 900, Math.random() * 900, Math.random() * 3 );
+				vb.animate({
+					x: Math.random() * 900,
+					y: Math.random() * 900,
+					width: Math.random() * 900,
+					height: Math.random() * 900
+				});
 			});
 		});
 

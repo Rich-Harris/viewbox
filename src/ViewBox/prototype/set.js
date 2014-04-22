@@ -1,15 +1,21 @@
 define([
+	'utils/clean',
 	'utils/extend',
-	'utils/constrain'
+	'utils/constrain',
+	'utils/maximise'
 ], function (
+	clean,
 	extend,
-	constrain
+	constrain,
+	maximise
 ) {
 
 	'use strict';
 
 	return function ViewBox$set ( x, y, width, height, constraints ) {
 		var constrained;
+
+		if ( this._dirty ) clean( this );
 
 		if ( typeof x === 'object' ) {
 			constraints = y;
@@ -25,10 +31,17 @@ define([
 			this.height = height;
 		}
 
+		console.log( this.toJSON() );
+
 		extend( this.constraints, constraints );
 
 		constrained = constrain( this.x, this.y, this.width, this.height, this._elWidth, this._elHeight, this.constraints );
-		extend( this, constrained );
+		console.log( 'constrained', constrained );
+
+		this.x = constrained.x;
+		this.y = constrained.y;
+		this.width = constrained.width;
+		this.height = constrained.height;
 
 		this.svg.setAttribute( 'viewBox', this.toString() );
 		this._dirty = true;

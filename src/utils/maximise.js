@@ -2,28 +2,20 @@ define( function () {
 
 	'use strict';
 
-	return function maximise ( x, y, width, height, elWidth, elHeight ) {
-		var cx, cy, elAspectRatio, viewBoxAspectRatio, maximised, width, height;
+	var maximised = {};
 
-		cx = x + width / 2;
-		cy = y + height / 2;
-
-		elAspectRatio = elWidth / elHeight;
-		viewBoxAspectRatio = width / height;
-
-		maximised = {};
-
-		if ( viewBoxAspectRatio < elAspectRatio ) {
-			// specified view is narrower than container - we
-			// need to increase the width
-			maximised.width = height * elAspectRatio;
+	return function maximise ( x, y, width, height, containerAspectRatio ) {
+		if ( ( width / height ) < containerAspectRatio ) {
+			// preserve height
+			maximised.width = height * containerAspectRatio;
 			maximised.height = height;
 
 			maximised.x = x - ( maximised.width - width ) / 2;
 			maximised.y = y;
 		} else {
+			// preserve width
 			maximised.width = width;
-			maximised.height = width / elAspectRatio;
+			maximised.height = width / containerAspectRatio;
 
 			maximised.x = x;
 			maximised.y = y - ( maximised.height - height ) / 2;

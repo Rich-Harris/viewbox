@@ -1,26 +1,23 @@
 define([
 	'utils/rAF',
 	'utils/constrain',
-	'utils/maximise'
+	'utils/maximise',
+	'animation/Tween',
+	'animation/VanWijk'
 ], function (
 	rAF,
 	constrain,
-	maximise
+	maximise,
+	Tween,
+	VanWijk
 ) {
 
-	var animation, maximised;
+	var animation, empty = {};
 
-	maximised = {}; // we can reuse this object
-
-	var animation = function ( viewBox, to, options ) {
+	animation = function ( viewBox, to, options ) {
 		var animation, fx, fy, fw, fh, dx, dy, dw, dh, startTime, duration, running, easing, loop;
 
 		animation = {};
-
-		// First, we need to get the maximised viewbox
-		maximised = maximise( viewBox.x, viewBox.y, viewBox.width, viewBox.height, viewBox._elWidth, viewBox._elHeight );
-
-		console.log( 'maximised', maximised );
 
 		fx = viewBox.x;
 		fy = viewBox.y;
@@ -114,7 +111,7 @@ define([
 			x = ( x.x !== undefined ? x.x : this.x );
 		}
 
-		options = options || {};
+		options = options || empty;
 
 		if ( this.animation ) {
 			this.animation.stop();
@@ -122,13 +119,11 @@ define([
 
 		constrained = constrain( this, x, y, width, height );
 
-		this.animation = animation( this, constrained, options );
+		if ( options.smooth ) {
+			this.animation = new VanWijk( this, constrained, options );
+		} else {
+			this.animation = new Tween( this, constrained, options );
+		}
 	};
-
-
-
-
-
-
 
 });
