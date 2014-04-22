@@ -84,4 +84,6 @@ define([
 		this.running = false;
 	};
 
+	return Tween;
+
 });

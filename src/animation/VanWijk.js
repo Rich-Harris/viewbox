@@ -14,4 +14,6 @@ define([
 		this.running = false;
 	};
 
+	return VanWijk;
+
 });

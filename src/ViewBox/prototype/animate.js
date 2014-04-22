@@ -2,12 +2,14 @@ define([
 	'utils/rAF',
 	'utils/constrain',
 	'utils/maximise',
+	'utils/minimise',
 	'animation/Tween',
 	'animation/VanWijk'
 ], function (
 	rAF,
 	constrain,
 	maximise,
+	minimise,
 	Tween,
 	VanWijk
 ) {
@@ -100,7 +102,7 @@ define([
 	};
 
 	return function ViewBox$animate ( x, y, width, height, options ) {
-		var constrained;
+		var maximised, reshaped, constrained;
 
 		if ( typeof x === 'object' ) {
 			options = y;
@@ -117,7 +119,13 @@ define([
 			this.animation.stop();
 		}
 
-		constrained = constrain( this, x, y, width, height );
+		// first, reshape the current viewbox so it matches the target shape
+		maximised = maximise( this.x, this.y, this.width, this.height, this._elWidth / this._elHeight );
+		reshaped = minimise( maximised.x, maximised.y, maximised.width, maximised.height, width / height );
+
+		this.set( reshaped );
+
+		constrained = constrain( x, y, width, height, this._elWidth, this._elHeight, this.constraints );
 
 		if ( options.smooth ) {
 			this.animation = new VanWijk( this, constrained, options );

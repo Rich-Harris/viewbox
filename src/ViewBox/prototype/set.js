@@ -31,12 +31,9 @@ define([
 			this.height = height;
 		}
 
-		console.log( this.toJSON() );
-
 		extend( this.constraints, constraints );
 
 		constrained = constrain( this.x, this.y, this.width, this.height, this._elWidth, this._elHeight, this.constraints );
-		console.log( 'constrained', constrained );
 
 		this.x = constrained.x;
 		this.y = constrained.y;
