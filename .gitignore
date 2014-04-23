@@ -3,3 +3,4 @@ build/
 !sandbox/*
 workspace/
 tmp/
+amd/

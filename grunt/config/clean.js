@@ -1,4 +1,5 @@
 module.exports = {
 	tmp: [ 'tmp/' ],
-	build: [ 'build/' ]
+	build: [ 'build/' ],
+	amd: [ 'amd' ]
 };

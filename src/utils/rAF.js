@@ -1,37 +1,31 @@
-define( function () {
+// https://gist.github.com/paulirish/1579671
+(function( vendors, lastTime, window ) {
 
-	'use strict';
+	var x;
 
-	// https://gist.github.com/paulirish/1579671
-	(function( vendors, lastTime, window ) {
+	for ( x = 0; x < vendors.length && !window.requestAnimationFrame; ++x ) {
+		window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+		window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+	}
 
-		var x;
+	if ( !window.requestAnimationFrame ) {
+		window.requestAnimationFrame = function(callback) {
+			var currTime, timeToCall, id;
 
-		for ( x = 0; x < vendors.length && !window.requestAnimationFrame; ++x ) {
-			window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-			window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
-		}
+			currTime = Date.now();
+			timeToCall = Math.max( 0, 16 - (currTime - lastTime ) );
+			id = window.setTimeout( function() { callback(currTime + timeToCall); }, timeToCall );
 
-		if ( !window.requestAnimationFrame ) {
-			window.requestAnimationFrame = function(callback) {
-				var currTime, timeToCall, id;
+			lastTime = currTime + timeToCall;
+			return id;
+		};
+	}
 
-				currTime = Date.now();
-				timeToCall = Math.max( 0, 16 - (currTime - lastTime ) );
-				id = window.setTimeout( function() { callback(currTime + timeToCall); }, timeToCall );
+	if ( !window.cancelAnimationFrame ) {
+		window.cancelAnimationFrame = function( id ) {
+			window.clearTimeout( id );
+		};
+	}
+}( ['ms', 'moz', 'webkit', 'o'], 0, window ));
 
-				lastTime = currTime + timeToCall;
-				return id;
-			};
-		}
-
-		if ( !window.cancelAnimationFrame ) {
-			window.cancelAnimationFrame = function( id ) {
-				window.clearTimeout( id );
-			};
-		}
-	}( ['ms', 'moz', 'webkit', 'o'], 0, window ));
-
-	return window.requestAnimationFrame;
-
-});
+export default window.requestAnimationFrame;

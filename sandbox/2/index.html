@@ -40,7 +40,7 @@
 	</footer>
 
 	<!-- JS -->
-	<script src='../require.js'></script>
+	<script src='../system.js'></script>
 	<script>
 		var vb, fixture, svg, circle, rect, button;
 
@@ -49,10 +49,11 @@
 		button = fixture.querySelector( 'button' );
 
 		// Configure RequireJS to load ViewBox from the src/ folder
-		require.config({ baseUrl: '../../src/' });
+		//require.config({ baseUrl: '../../amd/' });
 
-		require([ 'viewbox' ], function ( ViewBox ) {
-			window.ViewBox = ViewBox;
+		System.paths['*'] = '../../src/*.js';
+		System.import( 'viewbox' ).then( function ( lib ) {
+			var ViewBox = window.ViewBox = lib.default;
 
 			// YOUR CODE GOES HERE
 			vb = new ViewBox( svg );
@@ -111,6 +112,10 @@
 					},
 					easing: 'easeInOut'
 				});
+			});
+		}).catch( function ( err ) {
+			setTimeout( function () {
+				throw err;
 			});
 		});
 

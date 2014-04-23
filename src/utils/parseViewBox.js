@@ -1,16 +1,10 @@
-define( function () {
+export default function parseViewBox ( str ) {
+	var split = str.split( ' ' );
 
-	'use strict';
-
-	return function parseViewBox ( str ) {
-		var split = str.split( ' ' );
-
-		return {
-			x: +split[0],
-			y: +split[1],
-			width: +split[2],
-			height: +split[3]
-		};
+	return {
+		x: +split[0],
+		y: +split[1],
+		width: +split[2],
+		height: +split[3]
 	};
-
-});
+};

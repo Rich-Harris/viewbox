@@ -1,11 +1,64 @@
-define([
-	'ViewBox/ViewBox'
-], function (
-	ViewBox
-) {
+import animate from 'prototype/animate';
+import getClientCoords from 'prototype/getClientCoords';
+import getSvgCoords from 'prototype/getSvgCoords';
+import getZoom from 'prototype/getZoom';
+import pan from 'prototype/pan';
+import set from 'prototype/set';
+import toJSON from 'prototype/toJSON';
+import toString from 'prototype/toString';
+import zoom from 'prototype/zoom';
 
-	'use strict';
+import easing from 'utils/easing';
+import getViewBoxFromSvg from 'utils/getViewBoxFromSvg';
 
-	return ViewBox;
+var ViewBox, empty = {};
 
-});
+ViewBox = function ( svg, options ) {
+
+	var self = this, initialViewBox;
+
+	if ( !( svg instanceof SVGSVGElement ) ) {
+		throw new Error( 'First argument must be an svg element' );
+	}
+
+	options = options || empty;
+
+	this.svg = svg;
+	this.constraints = options.constraints || {};
+
+	// register as dirty whenever user resizes or scrolls (manually invoke using
+	// the viewBox.dirty() method)
+	this.dirty = function () {
+		self._dirty = true;
+	};
+
+	window.addEventListener( 'resize', this.dirty );
+	window.addEventListener( 'scroll', this.dirty );
+
+	this.dirty();
+
+	initialViewBox = getViewBoxFromSvg( this.svg );
+
+	if ( 'x' in options ) initialViewBox.x = options.x;
+	if ( 'y' in options ) initialViewBox.y = options.y;
+	if ( 'width' in options ) initialViewBox.width = options.width;
+	if ( 'height' in options ) initialViewBox.height = options.height;
+
+	this.set( initialViewBox );
+};
+
+ViewBox.prototype = {
+	animate: animate,
+	getClientCoords: getClientCoords,
+	getSvgCoords: getSvgCoords,
+	getZoom: getZoom,
+	pan: pan,
+	set: set,
+	toJSON: toJSON,
+	toString: toString,
+	zoom: zoom
+};
+
+ViewBox.easing = easing;
+
+export default ViewBox;

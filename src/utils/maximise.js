@@ -1,27 +1,21 @@
-define( function () {
+export default function maximise ( x, y, width, height, containerAspectRatio ) {
+	var maximised = {};
 
-	'use strict';
+	if ( ( width / height ) < containerAspectRatio ) {
+		// preserve height
+		maximised.width = height * containerAspectRatio;
+		maximised.height = height;
 
-	return function maximise ( x, y, width, height, containerAspectRatio ) {
-		var maximised = {};
+		maximised.x = x - ( maximised.width - width ) / 2;
+		maximised.y = y;
+	} else {
+		// preserve width
+		maximised.width = width;
+		maximised.height = width / containerAspectRatio;
 
-		if ( ( width / height ) < containerAspectRatio ) {
-			// preserve height
-			maximised.width = height * containerAspectRatio;
-			maximised.height = height;
+		maximised.x = x;
+		maximised.y = y - ( maximised.height - height ) / 2;
+	}
 
-			maximised.x = x - ( maximised.width - width ) / 2;
-			maximised.y = y;
-		} else {
-			// preserve width
-			maximised.width = width;
-			maximised.height = width / containerAspectRatio;
-
-			maximised.x = x;
-			maximised.y = y - ( maximised.height - height ) / 2;
-		}
-
-		return maximised;
-	};
-
-});
+	return maximised;
+};

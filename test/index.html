@@ -10,9 +10,17 @@
 
 	<script src='vendor/qunit.js'></script>
 	<script src='vendor/simulant.js'></script>
-	<script src='../tmp/ViewBox.js'></script>
 
-	<!-- load test modules -->
-	<script src='tests/basic.js'></script>
+	<script src='vendor/system.js'></script>
+	<script>
+		QUnit.config.autostart = false;
+
+		System.paths['*'] = '../src/*';
+		System.paths['tests/*'] = '../test/tests/*';
+
+		System.import( 'tests/basic' ).then( function () {
+			QUnit.start();
+		});
+	</script>
 </body>
 </html>

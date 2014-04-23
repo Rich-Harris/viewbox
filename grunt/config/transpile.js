@@ -3,9 +3,9 @@ module.exports = {
 		type: 'amd',
 		files: [{
 			expand: true,
-			cwd: 'es6test/in/',
+			cwd: 'src/',
 			src: ['**/*.js'],
-			dest: 'es6test/out/'
+			dest: 'amd/'
 		}]
 	}
 }

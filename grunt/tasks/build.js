@@ -5,9 +5,12 @@ module.exports = function ( grunt ) {
 	grunt.registerTask( 'build', [
 		'clean',
 		'jshint',
+		'transpile',
 		'requirejs',
 		'concat:closure',
-		'jsbeautifier'
+		'jsbeautifier',
+		'copy:build',
+		'clean:amd'
 	]);
 
 };
