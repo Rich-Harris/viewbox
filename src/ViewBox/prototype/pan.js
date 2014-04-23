@@ -1,7 +1,9 @@
 define([
+	'utils/extend',
 	'utils/clean',
 	'utils/constrain'
 ], function (
+	extend,
 	clean,
 	constrain
 ) {
@@ -11,7 +13,7 @@ define([
 	return function ViewBox$pan ( dx, dy, animate ) {
 		var zoom, newX, newY, constrained;
 
-		if ( this._dirty ) this.clean();
+		if ( this._dirty ) clean( this );
 
 		if ( typeof dx === 'object' ) {
 			animate = dx.animate;
