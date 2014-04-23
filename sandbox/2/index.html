@@ -15,7 +15,7 @@
 	<style>
 		svg {
 			width: 450px;
-			height: 750px;
+			height: 450px;
 			outline: 1px solid #eee;
 		}
 
@@ -55,9 +55,7 @@
 			window.ViewBox = ViewBox;
 
 			// YOUR CODE GOES HERE
-			vb = new ViewBox( svg, {
-				constraints: { left: 100, right: 800, top: 100, bottom: 800 }
-			});
+			vb = new ViewBox( svg );
 
 			get( 'awesome_tiger', function ( doc ) {
 				while ( doc.rootElement.firstChild ) {

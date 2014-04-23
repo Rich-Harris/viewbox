@@ -109,9 +109,11 @@ define([
 
 			rAF( loop );
 
-			pos = lerp2( c0, c1, ( u( s ) - u0 ) / ( u1 - u0 ) );
+			eased = easingFn( s * normaliseFactor ) / normaliseFactor;
 
-			width = w( s );
+			pos = lerp2( c0, c1, ( u( eased ) - u0 ) / ( u1 - u0 ) );
+
+			width = w( eased );
 			height = ( width / aspectRatio );
 
 			set( viewBox, {
