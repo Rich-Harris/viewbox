@@ -2,7 +2,7 @@ module.exports = {
 	compile: {
 		options: {
 			baseUrl: 'amd/',
-			name: 'ViewBox',
+			name: 'viewbox',
 			out: 'tmp/viewbox.js',
 			optimize: 'none',
 			logLevel: 2,

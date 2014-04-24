@@ -15,11 +15,13 @@
 	<script>
 		QUnit.config.autostart = false;
 
-		System.paths['*'] = '../src/*';
-		System.paths['tests/*'] = '../test/tests/*';
+		System.paths['*'] = '../src/*.js';
+		System.paths['tests/*'] = '../test/tests/*.js';
 
 		System.import( 'tests/basic' ).then( function () {
 			QUnit.start();
+		}).catch( function ( err ) {
+			console.log( 'ERROR:', err );
 		});
 	</script>
 </body>

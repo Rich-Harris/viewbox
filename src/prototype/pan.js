@@ -1,5 +1,5 @@
 import clean from 'utils/clean';
-import extend from 'utils/extend';
+import set from 'utils/set';
 import constrain from 'utils/constrain';
 
 export default function ViewBox$pan ( dx, dy, animate ) {
@@ -23,7 +23,6 @@ export default function ViewBox$pan ( dx, dy, animate ) {
 	if ( animate ) {
 		this.animate( constrained, animate );
 	} else {
-		extend( this, constrained );
-		this.svg.setAttribute( 'viewBox', this.toString() );
+		set( this, constrained );
 	}
 };

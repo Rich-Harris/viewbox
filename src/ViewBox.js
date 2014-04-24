@@ -8,6 +8,11 @@ import toJSON from 'prototype/toJSON';
 import toString from 'prototype/toString';
 import zoom from 'prototype/zoom';
 
+import mouseDrag from 'interaction/mouseDrag';
+import singleFingerDrag from 'interaction/singleFingerDrag';
+import applyInertia from 'interaction/applyInertia';
+
+import clean from 'utils/clean';
 import easing from 'utils/easing';
 import getViewBoxFromSvg from 'utils/getViewBoxFromSvg';
 
@@ -35,8 +40,6 @@ ViewBox = function ( svg, options ) {
 	window.addEventListener( 'resize', this.dirty );
 	window.addEventListener( 'scroll', this.dirty );
 
-	this.dirty();
-
 	initialViewBox = getViewBoxFromSvg( this.svg );
 
 	if ( 'x' in options ) initialViewBox.x = options.x;
@@ -44,7 +47,23 @@ ViewBox = function ( svg, options ) {
 	if ( 'width' in options ) initialViewBox.width = options.width;
 	if ( 'height' in options ) initialViewBox.height = options.height;
 
+	clean( this );
+
 	this.set( initialViewBox );
+
+	// set up interactions
+	this.inertia = !!options.inertia;
+	this._applyInertia = function () {
+		applyInertia( self );
+	};
+
+	if ( options.mouseDrag ) {
+		mouseDrag( this );
+	}
+
+	if ( options.singleFingerDrag ) {
+		singleFingerDrag( this );
+	}
 };
 
 ViewBox.prototype = {

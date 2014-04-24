@@ -2,6 +2,7 @@
 <html lang='en-GB'>
 <head>
 	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width'
 
 	<title>2 | ViewBox.js sandbox</title>
 
@@ -56,7 +57,12 @@
 			var ViewBox = window.ViewBox = lib.default;
 
 			// YOUR CODE GOES HERE
-			vb = new ViewBox( svg );
+			vb = new ViewBox( svg, {
+				mouseDrag: true,
+				singleFingerDrag: true,
+				inertia: true,
+				constraints: { left: 0, right: 900, top: 0, bottom: 900 }
+			});
 
 			get( 'awesome_tiger', function ( doc ) {
 				while ( doc.rootElement.firstChild ) {
@@ -72,20 +78,6 @@
 
 				vb.animate( 300, 200, 400, 500, {
 					smooth: true
-				});
-			});
-
-			svg.addEventListener( 'click', function ( event ) {
-				var svgCoords = vb.getSvgCoords( event.clientX, event.clientY );
-
-				vb.animate({
-					x: svgCoords.x - vb.width / 2,
-					y: svgCoords.y - vb.height / 2,
-					width: vb.width,
-					height: vb.height
-				}, {
-					smooth: true,
-					easing: 'easeInOut'
 				});
 			});
 
