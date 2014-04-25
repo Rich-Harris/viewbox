@@ -1,8 +1,9 @@
 import zoom from 'utils/zoom';
-import extend from 'utils/extend';
+import constrain from 'utils/constrain';
+import set from 'utils/set';
 
 export default function ViewBox$zoom ( clientX, clientY, factor, animate ) {
-	var coords, zoomed, corrected, maxWidth, maxHeight;
+	var coords, zoomed, constrained, maxWidth, maxHeight;
 
 	if ( typeof clientX === 'object' ) {
 		factor = clientX.factor;
@@ -35,12 +36,11 @@ export default function ViewBox$zoom ( clientX, clientY, factor, animate ) {
 
 	zoomed = zoom( this, coords.x, coords.y, factor );
 
-	corrected = this.correct( zoomed );
+	constrained = constrain( zoomed.x, zoomed.y, zoomed.width, zoomed.height, this._elWidth, this._elHeight, this.constraints );
 
 	if ( animate ) {
-		this.animate( corrected, animate );
+		this.animate( constrained, animate );
 	} else {
-		extend( this, corrected );
-		this.svg.setAttribute( 'viewBox', this.toString() );
+		set( this, constrained );
 	}
 };

@@ -9,7 +9,7 @@ import toString from 'prototype/toString';
 import zoom from 'prototype/zoom';
 
 import mouseDrag from 'interaction/mouseDrag';
-import singleFingerDrag from 'interaction/singleFingerDrag';
+import touch from 'interaction/touch';
 import applyInertia from 'interaction/applyInertia';
 
 import clean from 'utils/clean';
@@ -57,12 +57,16 @@ ViewBox = function ( svg, options ) {
 		applyInertia( self );
 	};
 
+	// mouse interactions
 	if ( options.mouseDrag ) {
 		mouseDrag( this );
 	}
 
-	if ( options.singleFingerDrag ) {
-		singleFingerDrag( this );
+	// touch interactions
+	if ( 'ontouchstart' in this.svg ) {
+		if ( options.singleFingerDrag || options.twoFingerDrag || options.pinchZoom ) {
+			touch( this, options );
+		}
 	}
 };
 
