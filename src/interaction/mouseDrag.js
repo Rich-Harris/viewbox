@@ -12,6 +12,9 @@ export default function draggable ( viewBox ) {
 	svg = viewBox.svg;
 
 	function mousedownHandler ( event ) {
+		// we don't care about right-clicks etc
+		if ( event.which !== undefined && event.which !== 1 ) return;
+
 		if ( viewBox._dirty ) clean( viewBox );
 
 		zoom = viewBox.getZoom();
