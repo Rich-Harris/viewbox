@@ -30,7 +30,7 @@ export default function draggable ( viewBox ) {
 	function mousemoveHandler ( event ) {
 		if ( !dragging ) return;
 
-		viewBox.pan( ( event.clientX - lastX ) / zoom, ( event.clientY - lastY ) / zoom );
+		viewBox.pan( ( event.clientX - lastX ), ( event.clientY - lastY ) );
 
 		lastX = event.clientX;
 		lastY = event.clientY;
