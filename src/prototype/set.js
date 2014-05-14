@@ -12,20 +12,16 @@ export default function ViewBox$set ( x, y, width, height, constraints ) {
 	if ( typeof x === 'object' ) {
 		constraints = y;
 
-		this.x = x.x;
-		this.y = x.y;
-		this.width = x.width;
-		this.height = x.height;
-	} else {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
+		height = x.height;
+		width = x.width;
+		y = x.y;
+		x = x.x;
 	}
 
 	extend( this.constraints, constraints );
 
-	constrained = constrain( this.x, this.y, this.width, this.height, this._elWidth, this._elHeight, this.constraints );
+	constrained = constrain( x, y, width, height, this._elWidth, this._elHeight, this.constraints );
+	console.log( 'constrained', constrained );
 
 	set( this, constrained );
 };
