@@ -1,7 +1,7 @@
 {
   "name": "viewbox",
   "description": "Pan and zoom the contents of SVG elements, and translate between coordinate systems",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "build/ViewBox.js",
   "github": "https://github.com/Rich-Harris/ViewBox",
   "author": "Rich Harris",
